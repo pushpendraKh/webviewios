@@ -6,21 +6,35 @@
 //
 
 import SwiftUI
+import WebKit
 
 struct ContentView: View {
+    let url = URL(string: "https://global.transak.com")!
+    @State private var showWebView = false
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Button("Open URL") {
+                showWebView = true
+            }
         }
-        .padding()
+        .sheet(isPresented: $showWebView) {
+            WebView(url: url)
+        }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+struct WebView: UIViewRepresentable {
+    let url: URL
+
+    func makeUIView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        uiView.load(request)
     }
 }
+
+
